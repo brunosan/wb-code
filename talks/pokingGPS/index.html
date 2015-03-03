@@ -1,408 +1,244 @@
 <!doctype html>
 <html lang="en">
+<head>
+<meta charset="utf-8">
 
-	<head>
-		<meta charset="utf-8">
+<title>Poking around with 50 Million GPS points</title>
 
-		<title>reveal.js - The HTML Presentation Framework</title>
+<meta name="description" content="Quick open tools to mess with massive* data">
+<meta name="author" content="Bruno Sanchez-andrade Nuno">
 
-		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
-		<meta name="author" content="Hakim El Hattab">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+<link rel="stylesheet" href="css/reveal.css">
+<link rel="stylesheet" href="css/theme/black.css" id="theme">
 
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+<!-- Code syntax highlighting -->
+<link rel="stylesheet" href="lib/css/zenburn.css">
 
-		<!-- Code syntax highlighting -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+<!-- Printing and PDF exports -->
+<script>
+var link = document.createElement( 'link' );
+link.rel = 'stylesheet';
+link.type = 'text/css';
+link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+document.getElementsByTagName( 'head' )[0].appendChild( link );
+</script>
 
-		<!-- Printing and PDF exports -->
-		<script>
-			var link = document.createElement( 'link' );
-			link.rel = 'stylesheet';
-			link.type = 'text/css';
-			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
-			document.getElementsByTagName( 'head' )[0].appendChild( link );
-		</script>
+<!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
 
-		<!--[if lt IE 9]>
-		<script src="lib/js/html5shiv.js"></script>
-		<![endif]-->
-	</head>
+<body>
 
-	<body>
+<div class="reveal">
 
-		<div class="reveal">
+  <!-- Any section element inside of this container is displayed as a slide -->
+  <div class="slides">
+    <section>
+      <h3>Poking 5 million GPS locations</h3>
+      <h3></h3>
+      <small>Comments? <a href="http://twitter.com/brunosan">@brunosan</a></small> <br>
+      <small>Edits? <a href="http://github.com/brunosan/wb-code/talks/pokingGps">Github repo</a></small>
+    </section>
+    <section>
+      <h3>Poking 50 million GPS locations</h3>
+      <h3>with a Best Buy laptop</h3>
+      <small>Comments? <a href="http://twitter.com/brunosan">@brunosan</a></small> <br>
+      <small>Edits? <a href="http://github.com/brunosan/wb-code/talks/pokingGps">Github repo</a></small>
+    </section>
 
-			<!-- Any section element inside of this container is displayed as a slide -->
-			<div class="slides">
-				<section>
-					<h1>Reveal.js</h1>
-					<h3>The HTML Presentation Framework</h3>
-					<p>
-						<small>Created by <a href="http://hakim.se">Hakim El Hattab</a> / <a href="http://twitter.com/hakimel">@hakimel</a></small>
-					</p>
-				</section>
+    <section data-markdown>
+      <script type="text/template">
+  ## The data 
+  A *lot* of this 
+    
+    id;adjustedtimestamp;battery;boot;charging;failednetwork;gpserror;heading;imei;lat;lon;panic;received;sent;shape;shutdown;signal;timestamp;velocity;websocket
+    85319703;2013-09-18 16:16:00;;;;;10;57;356097050895537;10.3002443313599;123.872734069824;;2013-09-18 16:16:26.331;;0101000020E6100000000000A0B9992440000000E0DAF75E40;;;2013-09-18 16:16:00;9;t
+    85319704;2013-09-18 16:16:00;;;;;10;58;356097050895537;10.3004837036133;123.873085021973;;2013-09-18 16:16:26.331;;0101000020E610000000000000D9992440000000A0E0F75E40;;;2013-09-18 16:16:00;8;t
+    85319705;2013-09-18 16:16:00;;;;;10;58;356097050895537;10.3006353378296;123.873306274414;;2013-09-18 16:16:26.331;;0101000020E6100000000000E0EC99244000000040E4F75E40;;;2013-09-18 16:16:00;3;t
+    85319706;2013-09-18 16:16:00;;;;;10;57;356097050895537;10.3007659912109;123.873504638672;;2013-09-18 16:16:26.331;;0101000020E610000000000000FE99244000000080E7F75E40;;;2013-09-18 16:16:00;5;t
+    85319707;2013-09-18 16:15:54;;;;;10;61;355600057392837;10.2939691543579;123.898536682129;;2013-09-18 16:16:26.911;;0101000020E61000000000002083962440000000A081F95E40;;;2013-09-18 16:15:54;0;t
+    85319708;2013-09-18 16:15:59;;;;;10;61;355600057392837;10.2939691543579;123.898536682129;;2013-09-18 16:16:26.911;;0101000020E61000000000002083962440000000A081F95E40;;;2013-09-18 16:15:59;0;t
+    85319709;2013-09-18 16:15:59;;;;;10;61;355600057392837;10.2939691543579;123.898536682129;;2013-09-18 16:16:26.911;;0101000020E61000000000002083962440000000A081F95E40;;;2013-09-18 16:15:59;0;t
+    85319710;2013-09-18 16:15:59;;;;;20;61;355600057392837;10.2939691543579;123.898536682129;;2013-09-18 16:16:26.911;;0101000020E61000000000002083962440000000A081F95E40;;;2013-09-18 16:15:59;0;t
+    85319711;2013-09-18 16:15:59;;;;;15;61;355600057392837;10.2939767837524;123.898628234863;;2013-09-18 16:16:26.911;;0101000020E610000000000020849624400000002083F95E40;;;2013-09-18 16:15:59;0;t
+      </script>
+    </section>
+    <section data-markdown>
+      <script type="text/template">
+### What do we want to do with it?
 
-				<section>
-					<h2>Hello There</h2>
-					<p>
-						reveal.js enables you to create beautiful interactive slide decks using HTML. This presentation will show you examples of what it can do.
-					</p>
-				</section>
+  * How many records?
+  * General statistics (Direct record questions)
+  * Maps/Plots
+  * Greographically process the dots (GIS).
+<hr>
+### How do we want to do it?
 
-				<!-- Example of nested vertical slides -->
-				<section>
-					<section>
-						<h2>Vertical Slides</h2>
-						<p>Slides can be nested inside of each other.</p>
-						<p>Use the <em>Space</em> key to navigate through all slides.</p>
-						<br>
-						<a href="#" class="navigate-down">
-							<img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
-						</a>
-					</section>
-					<section>
-						<h2>Basement Level 1</h2>
-						<p>Nested slides are useful for adding additional detail underneath a high level horizontal slide.</p>
-					</section>
-					<section>
-						<h2>Basement Level 2</h2>
-						<p>That's it, time to go back up.</p>
-						<br>
-						<a href="#/2">
-							<img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Up arrow" style="-webkit-transform: rotate(180deg);">
-						</a>
-					</section>
-				</section>
+  * As cheaply/open/replicable/scalable as possible. 
+      </script>
+    </section>
 
-				<section>
-					<h2>Slides</h2>
-					<p>
-						Not a coder? Not a problem. There's a fully-featured visual editor for authoring these, try it out at <a href="http://slides.com" target="_blank">http://slides.com</a>.
-					</p>
-				</section>
+    <section data-markdown>
+      <script type="text/template">
+## If it were just a few lines ...
 
-				<section>
-					<h2>Point of View</h2>
-					<p>
-						Press <strong>ESC</strong> to enter the slide overview.
-					</p>
-					<p>
-						Hold down alt and click on any element to zoom in on it using <a href="http://lab.hakim.se/zoom-js">zoom.js</a>. Alt + click anywhere to zoom back out.
-					</p>
-				</section>
+  Many [open] tools to visualize the data
 
-				<section>
-					<h2>Touch Optimized</h2>
-					<p>
-						Presentations look great on touch devices, like mobile phones and tablets. Simply swipe through your slides.
-					</p>
-				</section>
+  We can test it picking just a few lines. (and `;` -> `,`.)
+    
+      head -100 locationupdate.csv | sed -e 's/;/,/g' > 100.csv
+      </script>
+    </section>
 
-				<section data-markdown>
-					<script type="text/template">
-						## Markdown support
+    <section>
+      <h3>Mapbox</h3>
 
-						Write content using inline or external Markdown.
-						Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
+      1.- Drop the file on <a href='http://www.mapbox.com/editor'>mapbox.com/editor</a>
+      <iframe width='100%' height='500px' frameBorder='0' src='https://a.tiles.mapbox.com/v4/brunosan.lc0g4l6f/attribution,zoompan,zoomwheel,geocoder,share.html?access_token=pk.eyJ1IjoiYnJ1bm9zYW4iLCJhIjoic3FUc1dJWSJ9.v0525WacYWcsHM1KtbZitg'></iframe>
+    </section>
 
-						```
-						<section data-markdown>
-						  ## Markdown support
+    <section >
+      <h3>CartoDB</h3>
 
-						  Write content using inline or external Markdown.
-						  Instructions and more info available in the [readme](https://github.com/hakimel/reveal.js#markdown).
-						</section>
-						```
-					</script>
-				</section>
+      1.- Drop the file on <a href='http://www.cartodb.com/'>cartodb.com</a>
+      <iframe width='100%' height='520' frameborder='0' src='http://brunosan.cartodb.com/viz/da06be4c-c144-11e4-aa68-0e4fddd5de28/embed_map' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
+    </section>
+    <section>
+      <h3>QGIS</h3>
 
-				<section>
-					<section id="fragments">
-						<h2>Fragments</h2>
-						<p>Hit the next arrow...</p>
-						<p class="fragment">... to step through ...</p>
-						<p><span class="fragment">... a</span> <span class="fragment">fragmented</span> <span class="fragment">slide.</span></p>
+      1.- Add CSV layer.</br>
+      (2.- Add OpenLayers plugin for the map backdrop.)
+      <img src='/media/qgis-100.png' width='75%'>
+    <p>... and many other options. </p>
+    </section>
 
-						<aside class="notes">
-							This slide has fragments which are also stepped through in the notes window.
-						</aside>
-					</section>
-					<section>
-						<h2>Fragment Styles</h2>
-						<p>There's different types of fragments, like:</p>
-						<p class="fragment grow">grow</p>
-						<p class="fragment shrink">shrink</p>
-						<p class="fragment roll-in">roll-in</p>
-						<p class="fragment fade-out">fade-out</p>
-						<p class="fragment current-visible">current-visible</p>
-						<p class="fragment highlight-red">highlight-red</p>
-						<p class="fragment highlight-blue">highlight-blue</p>
-					</section>
-				</section>
+    <section data-markdown>
+      <script type="text/template">
+<p>But this quick tools slow down and break with >>1000 dots </p>
+<p>- Even counting the lines takes time:</p>
 
-				<section id="transitions">
-					<h2>Transition Styles</h2>
-					<p>
-						You can select from different transitions, like: <br>
-						<a href="?transition=none#/transitions">None</a> -
-						<a href="?transition=fade#/transitions">Fade</a> -
-						<a href="?transition=slide#/transitions">Slide</a> -
-						<a href="?transition=convex#/transitions">Convex</a> -
-						<a href="?transition=concave#/transitions">Concave</a> -
-						<a href="?transition=zoom#/transitions">Zoom</a>
-					</p>
-				</section>
+    $time wc -l $data 
+    50.004.568  
+    -> 3.5 minutes
 
-				<section id="themes">
-					<h2>Themes</h2>
-					<p>
-						reveal.js comes with a few themes built in: <br>
-						<!-- Hacks to swap themes after the page has loaded. Not flexible and only intended for the reveal.js demo deck. -->
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/black.css'); return false;">Black (default)</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/white.css'); return false;">White</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/league.css'); return false;">League</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/sky.css'); return false;">Sky</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/beige.css'); return false;">Beige</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/simple.css'); return false;">Simple</a> <br>
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/serif.css'); return false;">Serif</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/night.css'); return false;">Night</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/moon.css'); return false;">Moon</a> -
-						<a href="#" onclick="document.getElementById('theme').setAttribute('href','css/theme/solarized.css'); return false;">Solarized</a>
-					</p>
-				</section>
+<p>- With `parallel` (and 4 cores) you can speed it up.</p>
 
-				<section>
-					<section data-background="#dddddd">
-						<h2>Slide Backgrounds</h2>
-						<p>
-							Set <code>data-background="#dddddd"</code> on a slide to change the background color. All CSS color formats are supported.
-						</p>
-						<a href="#" class="navigate-down">
-							<img width="178" height="238" data-src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
-						</a>
-					</section>
-					<section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png">
-						<h2>Image Backgrounds</h2>
-						<pre><code>&lt;section data-background="image.png"&gt;</code></pre>
-					</section>
-					<section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/image-placeholder.png" data-background-repeat="repeat" data-background-size="100px">
-						<h2>Tiled Backgrounds</h2>
-						<pre><code style="word-wrap: break-word;">&lt;section data-background="image.png" data-background-repeat="repeat" data-background-size="100px"&gt;</code></pre>
-					</section>
-					<section data-background-video="https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.mp4,https://s3.amazonaws.com/static.slid.es/site/homepage/v1/homepage-video-editor.webm" data-background-color="#000000">
-						<div style="background-color: rgba(0, 0, 0, 0.9); color: #fff; padding: 20px;">
-							<h2>Video Backgrounds</h2>
-							<pre><code style="word-wrap: break-word;">&lt;section data-background-video="video.mp4,video.webm"&gt;</code></pre>
-						</div>
-					</section>
-				</section>
+    $time cat  $data | parallel --block 10M wc -l | awk '{s+=$1} END {print s}'
+    50.004.568  
+    -> 1 minute! (1 million/second)
 
-				<section data-transition="slide" data-background="#4d7e65" data-background-transition="zoom">
-					<h2>Background Transitions</h2>
-					<p>
-						Different background transitions are available via the backgroundTransition option. This one's called "zoom".
-					</p>
-					<pre><code>Reveal.configure({ backgroundTransition: 'zoom' })</code></pre>
-				</section>
+(The awk step aggregates the partial counts.)</br>
+With `parallel --pipepart` tweaks you can get ~10x faster, but few operations are throughput limited
 
-				<section data-transition="slide" data-background="#b5533c" data-background-transition="zoom">
-					<h2>Background Transitions</h2>
-					<p>
-						You can override background transitions per-slide.
-					</p>
-					<pre><code style="word-wrap: break-word;">&lt;section data-background-transition="zoom"&gt;</code></pre>
-				</section>
+<p>- But nothing faster (and dirtier) than divinding the file size by the line size in bytes:</p>
+    
+    $file_size=`du -b $data | cut -f1`
+    $line_size=`head -2 $data | tail -1 | wc -c`
+    $echo $file_size/$line_size | bc`
+    50.214.969
+    -> 2 miliseconds
+      </script>
+    </section>
+    <section >
+    <h2> Map reducing</h2> 
+      <ul>
+        <li>Map: per-record questions</li>
+        <li>Reduce: Aggregate the results of those questions.</lib>
+      </ul>
 
-				<section>
-					<h2>Pretty Code</h2>
-					<pre><code data-trim contenteditable>
-function linkify( selector ) {
-  if( supports3DTransforms ) {
+<p>E.g. Rides per day of week</p>
+    
+<pre><code data-trim class='perl'>
+   #!/usr/bin/perl -w
+   use strict;
+   use Time::Piece;
 
-    var nodes = document.querySelectorAll( selector );
+   my %ocurr;
+   while (<>) {
+     my @data = split /[;]/; #split csv
+     my $t = Time::Piece->strptime($data[-3],"%Y-%m-%d %H:%M:%S"); #parse time
+     my $field=$t->_wday; #get day of week
+     $ocurr{$field} = 0 if (not exists $ocurr{$field});
+     $ocurr{$field}++
+   }
 
-    for( var i = 0, len = nodes.length; i &lt; len; i++ ) {
-      var node = nodes[i];
+   foreach my $field (keys %ocurr) {
+     printf "$field $ocurr{$field}\n"; #print results
+   }
+</code></pre>
 
-      if( !node.className ) {
-        node.className += ' roll';
-      }
-    }
-  }
-}
-					</code></pre>
-					<p>Code syntax highlighting courtesy of <a href="http://softwaremaniacs.org/soft/highlight/en/description/">highlight.js</a>.</p>
-				</section>
+    </section>
+     <section data-markdown>
+      <script type="text/template">
+#Reduce
 
-				<section>
-					<h2>Marvelous List</h2>
-					<ul>
-						<li>No order here</li>
-						<li>Or here</li>
-						<li>Or here</li>
-						<li>Or here</li>
-					</ul>
-				</section>
+    cat ~/wb-data/Holly/pre/locationupdate.csv| parallel --pipe --blocksize 128M -j 200% ./map-dow.pl | ./reduce.pl   
+    gnuplot plot-by-dow.gnu
 
-				<section>
-					<h2>Fantastic Ordered List</h2>
-					<ol>
-						<li>One is smaller than...</li>
-						<li>Two is smaller than...</li>
-						<li>Three!</li>
-					</ol>
-				</section>
+![](media/dow.png)
+      </script>
+    </section>
+     <section data-markdown>
+      <script type="text/template">
+```
+```
+      </script>
+    </section>
+     <section data-markdown>
+      <script type="text/template">
+```
+```
+      </script>
+    </section>
+     <section data-markdown>
+      <script type="text/template">
+```
+```
+      </script>
+    </section>
+     <section data-markdown>
+      <script type="text/template">
+```
+```
+      </script>
+    </section>
+              </div>
 
-				<section>
-					<h2>Tabular Tables</h2>
-					<table>
-						<thead>
-							<tr>
-								<th>Item</th>
-								<th>Value</th>
-								<th>Quantity</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>Apples</td>
-								<td>$1</td>
-								<td>7</td>
-							<tr>
-							<tr>
-								<td>Lemonade</td>
-								<td>$2</td>
-								<td>18</td>
-							<tr>
-							<tr>
-								<td>Bread</td>
-								<td>$3</td>
-								<td>2</td>
-							<tr>
-						</tbody>
-					</table>
-				</section>
+            </div>
 
-				<section>
-					<h2>Clever Quotes</h2>
-					<p>
-						These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-						&ldquo;The nice thing about standards is that there are so many to choose from&rdquo;</q> and block:
-					</p>
-					<blockquote cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-						&ldquo;For years there has been a theory that millions of monkeys typing at random on millions of typewriters would
-						reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue.&rdquo;
-					</blockquote>
-				</section>
+            <script src="lib/js/head.min.js"></script>
+            <script src="js/reveal.js"></script>
 
-				<section>
-					<h2>Intergalactic Interconnections</h2>
-					<p>
-						You can link between slides internally,
-						<a href="#/2/3">like this</a>.
-					</p>
-				</section>
+            <script>
 
-				<section>
-					<h2>Speaker View</h2>
-					<p>There's a <a href="https://github.com/hakimel/reveal.js#speaker-notes">speaker view</a>. It includes a timer, preview of the upcoming slide as well as your speaker notes.</p>
-					<p>Press the <em>S</em> key to try it out.</p>
+// Full list of configuration options available at:
+// https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+controls: true,
+progress: true,
+history: true,
+center: true,
 
-					<aside class="notes">
-						Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
-					</aside>
-				</section>
+transition: 'slide', // none/fade/slide/convex/concave/zoom
 
-				<section>
-					<h2>Export to PDF</h2>
-					<p>Presentations can be <a href="https://github.com/hakimel/reveal.js#pdf-export">exported to PDF</a>, here's an example:</p>
-					<iframe src="//www.slideshare.net/slideshow/embed_code/42840540" width="445" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:3px solid #666; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe>
-				</section>
+// Optional reveal.js plugins
+dependencies: [
+{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+{ src: 'plugin/zoom-js/zoom.js', async: true },
+{ src: 'plugin/notes/notes.js', async: true }
+]
+});
 
-				<section>
-					<h2>Global State</h2>
-					<p>
-						Set <code>data-state="something"</code> on a slide and <code>"something"</code>
-						will be added as a class to the document element when the slide is open. This lets you
-						apply broader style changes, like switching the page background.
-					</p>
-				</section>
+            </script>
 
-				<section data-state="customevent">
-					<h2>State Events</h2>
-					<p>
-						Additionally custom events can be triggered on a per slide basis by binding to the <code>data-state</code> name.
-					</p>
-					<pre><code class="javascript" data-trim contenteditable style="font-size: 18px;">
-Reveal.addEventListener( 'customevent', function() {
-	console.log( '"customevent" has fired' );
-} );
-					</code></pre>
-				</section>
-
-				<section>
-					<h2>Take a Moment</h2>
-					<p>
-						Press B or . on your keyboard to pause the presentation. This is helpful when you're on stage and want to take distracting slides off the screen.
-					</p>
-				</section>
-
-				<section>
-					<h2>Much more</h2>
-					<ul>
-						<li>Right-to-left support</li>
-						<li><a href="https://github.com/hakimel/reveal.js#api">Extensive JavaScript API</a></li>
-						<li><a href="https://github.com/hakimel/reveal.js#auto-sliding">Auto-progression</a></li>
-						<li><a href="https://github.com/hakimel/reveal.js#parallax-background">Parallax backgrounds</a></li>
-						<li><a href="https://github.com/hakimel/reveal.js#keyboard-bindings">Custom keyboard bindings</a></li>
-					</ul>
-				</section>
-
-				<section style="text-align: left;">
-					<h1>THE END</h1>
-					<p>
-						- <a href="http://slides.com">Try the online editor</a> <br>
-						- <a href="https://github.com/hakimel/reveal.js">Source code &amp; documentation</a>
-					</p>
-				</section>
-
-			</div>
-
-		</div>
-
-		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.js"></script>
-
-		<script>
-
-			// Full list of configuration options available at:
-			// https://github.com/hakimel/reveal.js#configuration
-			Reveal.initialize({
-				controls: true,
-				progress: true,
-				history: true,
-				center: true,
-
-				transition: 'slide', // none/fade/slide/convex/concave/zoom
-
-				// Optional reveal.js plugins
-				dependencies: [
-					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
-					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: 'plugin/zoom-js/zoom.js', async: true },
-					{ src: 'plugin/notes/notes.js', async: true }
-				]
-			});
-
-		</script>
-
-	</body>
-</html>
+            </body>
+            </html>
