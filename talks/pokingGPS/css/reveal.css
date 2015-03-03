@@ -135,6 +135,8 @@ body {
 .reveal .slides section .fragment.highlight-current-blue.current-fragment {
   color: #1b91ff; }
 
+
+.reveal p { text-align: left; font-size: 25px; }
 /*********************************************
  * DEFAULT ELEMENT STYLES
  *********************************************/
