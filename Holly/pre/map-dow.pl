@@ -1,22 +1,22 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl -w 
 
 use strict;
-use Time::Piece; 
+use DateTime::Format::Strptime;
 
+my $parser = DateTime::Format::Strptime->new(pattern => '%Y-%m-%d %H:%M:%S');
+my $format = DateTime::Format::Strptime->new(pattern => '%w' );
 my %ocurr;
 while (<>) {
-    my @data = split /[;]/;
-    my $t = Time::Piece->strptime($data[-3],"%Y-%m-%d %H:%M:%S");
-    my $field=$t->_wday;
-    #print "$data[-3], $field"; 
-    #my $field = (split /[\s:]/,$data[-3])[0];
-    #$field =~ s/\s/_/g;
+    my $data = (split /[;.]/,$_)[1];
+    my $t = $parser->parse_datetime($data); 
+    my $field=$format->format_datetime($t); 
+    #printf "$_ -> $data -> $t -> $field\n";
     $ocurr{$field} = 0 if (not exists $ocurr{$field});
     $ocurr{$field}++
 }
 
 foreach my $field (keys %ocurr) {
-    printf "$field $ocurr{$field}\n";
+    printf "$field $ocurr{$field}\n"; 
 }
 
 
