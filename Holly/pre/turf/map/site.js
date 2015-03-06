@@ -1,9 +1,10 @@
-var bbox =  [ -87.934324986, 41.644580105, -87.524388789, 42.023024908 ];
+var bbox = [ 123.83857727050781, 10.255465437158735,
+                 123.98620605468751, 10.395636925175673    ];
 L.mapbox.accessToken = 'pk.eyJ1IjoibW9yZ2FuaGVybG9ja2VyIiwiYSI6Ii1zLU4xOWMifQ.FubD68OEerk74AYCLduMZQ';
 
 var map = L.mapbox.map('map', 'examples.map-y7l23tes', 
     {zoomControl: false ,attributionControl: false, infoControl: true})
-    .setView([41.84,-87.65], 12);
+    .setView([ 10.298367918849806, 123.898315429], 12);
 map.scrollWheelZoom.disable();
 
 var layerGroup = L.layerGroup().addTo(map);
