@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset='utf-8' />
-	<title>Chicago Crime</title>
+	<title>Cebu traffic</title>
     <script>L_PREFER_CANVAS=true</script>
 	<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
 	<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v1.4.0/turf.min.js'></script>
@@ -48,7 +48,7 @@
             border-top-style: solid;
             border-width: 1px;
         }
-        #crimetitle { 
+        #traffictitle { 
             font-size: 150%; 
             font-weight: 900;
         }
@@ -114,7 +114,7 @@
 <body>
     <div id='map'></div>
     <div class='pin-top fill-navy pad1'>
-        <div id='crimetitle' class='col2 dark pad1y'>Chicago Crime</div>
+        <div id='traffictitle' class='col2 dark pad1y'>Cebu traffic</div>
         <div id='vizopts' class='pill col2'>
             <button id='heat' class='col1 button icon cloud big active'></button>
             <button id='square' class='col1 button icon grid big'></button>
@@ -124,7 +124,7 @@
             <button id='medium' class='col1 button icon time medium speed'></button>
             <button id='fast' class='col1 button icon time fast speed active'></button>
         </div>
-        <div class='pad1 col2 dark' id='month'></div>
+        <div class='pad1 col3 dark' id='month'></div>
     </div>
     <div id='progress' class='pin-bottom col12'></div>
     
