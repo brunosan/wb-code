@@ -18,7 +18,7 @@ rs.pipe(csvStream);
 // create 1/2 mi grid over chicago lon,lat
 var bbox = [ 123.83857727050781, 10.255465437158735,
              123.98620605468751, 10.395636925175673    ];
-var grid = turf.squareGrid(bbox, 0.5, 'miles');
+var grid = turf.squareGrid(bbox, 0.1, 'miles');
 fs.writeFileSync('grid.geojson', JSON.stringify(grid));
 grid.features.forEach(function(cell) {
     // precompute bboxes
