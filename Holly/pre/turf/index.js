@@ -1,16 +1,23 @@
-var JSONStream = require('JSONStream');
+var csv = require('csv-stream');
 var fs = require('fs');
 var turf = require('turf');
 
-var rs = fs.createReadStream('./crimes.json');
-var js = JSONStream.parse('.data.*');
-pace = require('pace')(5738523);
+var options = {
+    delimiter : ';' 
+}
 
-// pipe data from the crimes.json file so memory usage is kept low
-rs.pipe(js);
+var csvStream = csv.createStream(options);
+csvData="/home/brunosan/wb-data/Holly/pre/locationupdate.csv";
 
-// create 1/2 mi grid over chicago
-var bbox = [ -87.934324986, 41.644580105, -87.524388789, 42.023024908 ];
+var rs = fs.createReadStream(csvData);
+pace = require('pace')(50004568);
+
+// pipe data from the csv file so memory usage is kept low
+rs.pipe(csvStream);
+
+// create 1/2 mi grid over chicago lon,lat
+var bbox = [ 123.83857727050781, 10.255465437158735,
+             123.98620605468751, 10.395636925175673    ];
 var grid = turf.squareGrid(bbox, 0.5, 'miles');
 fs.writeFileSync('grid.geojson', JSON.stringify(grid));
 grid.features.forEach(function(cell) {
@@ -19,19 +26,20 @@ grid.features.forEach(function(cell) {
     cell.properties.total = 0;
 });
 
-var months = {};
-js.on('data', function (obj) {
+var months = {}; //save boolean for the array of months
+csvStream.on('data', function (obj) {
     pace.op();
     // check for valid lat, lons
-    if(obj[28] && obj[27]) {
-        var pt = turf.point([parseFloat(obj[28]), parseFloat(obj[27])]);
+    //console.log(JSON.stringify(obj));
+    if(obj['lat'] && obj['lon']) {
+        var pt = turf.point([parseFloat(obj['lon']), parseFloat(obj['lat'])]);
         for(var i = 0; i < grid.features.length; i++) {
             if(pt.geometry.coordinates[0] >= grid.features[i].bbox[0] &&
                pt.geometry.coordinates[0] <= grid.features[i].bbox[2] &&
                pt.geometry.coordinates[1] >= grid.features[i].bbox[1] &&
                pt.geometry.coordinates[1] <= grid.features[i].bbox[3] &&
                turf.inside(pt, grid.features[i])) {
-                var dateParts = obj[10].split('-');
+                var dateParts = obj['adjustedtimestamp'].split('-');
                 var month = dateParts[0]+'/'+dateParts[1];
                 months[month] = true;
                 if(!grid.features[i].properties[month]) grid.features[i].properties[month] = 0;
@@ -43,7 +51,7 @@ js.on('data', function (obj) {
     }
 });
 
-js.on('end', function() {
+csvStream.on('end', function() {
     months = Object.keys(months);
     // remove cells with no crimes across all months
     grid.features = grid.features.filter(function(cell) {
