@@ -5,7 +5,7 @@ L.mapbox.accessToken = 'pk.eyJ1IjoibW9yZ2FuaGVybG9ja2VyIiwiYSI6Ii1zLU4xOWMifQ.Fu
 var map = L.mapbox.map('map', 'examples.map-y7l23tes', 
     {zoomControl: false ,attributionControl: false, infoControl: true})
     .setView([ 10.298367918849806, 123.898315429], 12);
-map.scrollWheelZoom.disable();
+//map.scrollWheelZoom.disable();
 
 var layerGroup = L.layerGroup().addTo(map);
 
@@ -51,10 +51,12 @@ setInterval(function() {
     i+=5;
 }, 1);
 
+
+dow=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
 function setViz (grid, month) {
     // update month
     drawProgress();
-    document.getElementById('month').innerHTML = months[month].split('/')[1]+'/'+months[month].split('/')[0];
+    document.getElementById('month').innerHTML = months[month].split('-')[1]+'h '+dow[months[month].split('-')[0]];
     // filter empty data
     var filtered = turf.featurecollection([]);
     filtered.features = grid.features.filter(function(cell){
@@ -67,13 +69,13 @@ function setViz (grid, month) {
         // heatmap on points
         var contour = '#000';
         var heatData = filtered.features.map(function(pt) {
-            return [pt.geometry.coordinates[1], pt.geometry.coordinates[0], pt.properties[months[month]]/200];
+           return [pt.geometry.coordinates[1], pt.geometry.coordinates[0], Math.log(pt.properties[months[month]])/10];
         });
 
         // deal wih z11 & 12 & 13
-        var radius = 30;
-        var blur = 25;
-        if(map._zoom ===11) {
+        var radius = 4;
+        var blur = 1;
+        /*if(map._zoom ===11) {
             radius = 15;
             blur = 20;
         }
@@ -84,7 +86,7 @@ function setViz (grid, month) {
         if(map._zoom ===13) {
             radius = 40;
             blur = 50;
-        }
+        }*/
 
         L.heatLayer(heatData, { 
             maxZoom: 10,
