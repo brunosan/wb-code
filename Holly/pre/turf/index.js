@@ -26,7 +26,15 @@ grid.features.forEach(function(cell) {
     cell.properties.total = 0;
 });
 
-var months = {}; //save boolean for the array of months
+
+function parseDayHour(input) {
+  var parts = input.split(/[-\s:]+/);
+  // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
+  return (new Date(parts[0], parts[1]-1, parts[2])).getDay()+'-'+parts[3]; // months are 0-based
+  }
+
+
+var bins = {}; //save boolean for the array of months
 csvStream.on('data', function (obj) {
     pace.op();
     // check for valid lat, lons
@@ -39,11 +47,12 @@ csvStream.on('data', function (obj) {
                pt.geometry.coordinates[1] >= grid.features[i].bbox[1] &&
                pt.geometry.coordinates[1] <= grid.features[i].bbox[3] &&
                turf.inside(pt, grid.features[i])) {
-                var dateParts = obj['adjustedtimestamp'].split('-');
-                var month = dateParts[0]+'/'+dateParts[1];
-                months[month] = true;
-                if(!grid.features[i].properties[month]) grid.features[i].properties[month] = 0;
-                grid.features[i].properties[month]++;
+                //var dateParts = obj['adjustedtimestamp'].split(' ')[0].split(':');
+                //var month = dateParts[0]+'/'+dateParts[1];
+                var bin = parseDayHour(obj['adjustedtimestamp']);
+                bins[bin] = true;
+                if(!grid.features[i].properties[bin]) grid.features[i].properties[bin] = 0;
+                grid.features[i].properties[bin]++;
                 grid.features[i].properties.total++;
                 break;
             }
@@ -52,7 +61,7 @@ csvStream.on('data', function (obj) {
 });
 
 csvStream.on('end', function() {
-    months = Object.keys(months);
+    bins = Object.keys(bins);
     // remove cells with no crimes across all months
     grid.features = grid.features.filter(function(cell) {
         if(cell.properties.total > 0) return true;
@@ -60,8 +69,8 @@ csvStream.on('end', function() {
     // populate undefined months with a 0 value
     grid.features.forEach(function(cell) {
         delete cell.bbox;
-        months.forEach(function(month) {
-            if(!cell.properties[month]) cell.properties[month] = 0;
+        bins.forEach(function(bin) {
+            if(!cell.properties[bin]) cell.properties[bin] = 0;
         });
     });
     fs.writeFileSync('grid_dates.geojson', JSON.stringify(grid));
