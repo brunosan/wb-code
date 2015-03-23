@@ -1,4 +1,4 @@
-*.png
+.gitignore
 *.csv
 node_modules/
 *.swp
