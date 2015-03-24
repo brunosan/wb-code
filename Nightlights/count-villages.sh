@@ -22,7 +22,7 @@ WHERE place IN ('town', 'city','locality','village','hamlet', 'isolated_dwelling
 
 #complete rundown
 psql -d gis -c "
-Select count(*), place from planet_osm_point group by place order by count(*) desc:"
+Select count(*), place from planet_osm_point group by place order by count(*) desc;"
 # count  |         place
 #---------+------------------------
 # 1044915 |
