@@ -910,6 +910,11 @@ body {
 /*********************************************
  * PARALLAX BACKGROUND
  *********************************************/
+
+.backgrounds {
+  opacity: 0.05;
+}
+
 .reveal.has-parallax-background .backgrounds {
   -webkit-transition: all 0.8s ease;
           transition: all 0.8s ease; }
