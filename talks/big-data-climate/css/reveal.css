@@ -911,10 +911,6 @@ body {
  * PARALLAX BACKGROUND
  *********************************************/
 
-.backgrounds {
-  opacity: 0.2;
-}
-
 .reveal.has-parallax-background .backgrounds {
   -webkit-transition: all 0.8s ease;
           transition: all 0.8s ease; }
@@ -1146,3 +1142,24 @@ body {
 
 .zoomed .reveal .roll span:after {
   visibility: hidden; }
+
+  /***************************
+   * CUSTOM
+   * *************************/
+
+.backgrounds {
+  opacity: 0.2;
+}
+
+.backs blockquote { 
+  background:rgba(255, 255, 255, 0.61) !important
+}
+
+.backs .backgrounds { 
+  opacity: 1;
+  transition: opacity 4s ease-in-out;
+  -moz-transition: opacity 4s ease-in-out;
+  -webkit-transition: opacity 4s ease-in-out;
+}
+
+
