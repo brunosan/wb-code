@@ -1,0 +1,16 @@
+{
+  "name": "road-dist",
+  "version": "0.0.1",
+  "description": "Average distance to road",
+  "author": "Bruno Sánchez-Andrade Nuño <brunosanchez@worldbank.org>",
+  "license": "ISC",
+  "main": "index.js",
+  "dependencies": {
+    "tile-reduce": ">=3.0.1",
+    "turf": ">=2.0.2",
+    "tilebelt": "*",
+    "geojson-flatten": "*",
+    "geojson-normalize": "*"
+  },
+  "engine": "node 0.4.1"
+}
